@@ -15,8 +15,9 @@ class MainController extends AbstractController
     /**
      * @Route("/main", name="main")
      */
-    public function index(Test $test)
+    public function index(ManagerRegistry $doctrine)
     {
+        $test= $doctrine->getRepository(Test::class)->findAll();
         $dto = new TestDTO();
 
         $dto->name = $test->getName();
