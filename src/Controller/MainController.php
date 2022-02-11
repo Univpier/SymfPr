@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Repository\TestRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,19 +13,26 @@ use App\Entity\Test;
 use App\DTO\Response\TestDTO;
 class MainController extends AbstractController
 {
-
+    private $EntityManagerInterface;
+    private $testRepository;
+    public function __construct(EntityManagerInterface $EntityManagerInterface, TestRepository $testRepository)
+    {
+        $this->EntityManagerInterface = $EntityManagerInterface;
+        $this->testRepository = $testRepository;
+    }
     /**
      * @Route("/main", name="main")
      */
-    public function index(ManagerRegistry $doctrine)
+    public function index(Request $request)
     {
-        $test= $doctrine->getRepository(Test::class)->findAll();
+        $test = $request->query->get("name");
+//        $test->id = $request->query->get("id");
+//        $test->parentid = $request->query->get("parentid");
         $dto = new TestDTO();
-
         $dto->name = $test->getName();
-        $dto->id = $test->getId();
-        $dto->parentid = $test->getParentid();
-        echo json_encode($dto);
+//        $dto->id = $test->getId();
+//        $dto->parentid = $test->getParentid();
+        echo json_encode($request);
 //        $repository = $doctrine->getRepository(Test::class);
 //        $test= $repository->findAll();
 //      var_dump($test[0]->id);
